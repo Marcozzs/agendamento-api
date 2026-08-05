@@ -1,0 +1,45 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           String        @id @default(uuid())
+  name         String
+  email        String        @unique
+  passwordHash String
+  role         String        @default("CLIENT")
+  createdAt    DateTime      @default(now())
+  
+  // Relacionamento: Um usuário pode ter vários agendamentos
+  appointments Appointment[] 
+}
+
+model Service {
+  id              String        @id @default(uuid())
+  name            String
+  description     String?       // O '?' significa que é opcional
+  price           Decimal
+  durationMinutes Int
+  createdAt       DateTime      @default(now())
+  
+  // Relacionamento: Um serviço pode estar em vários agendamentos
+  appointments    Appointment[]
+}
+
+model Appointment {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  serviceId  String
+  service    Service  @relation(fields: [serviceId], references: [id], onDelete: Restrict)
+  startTime  DateTime
+  endTime    DateTime
+  status     String   @default("CONFIRMED")
+  createdAt  DateTime @default(now())
+}
