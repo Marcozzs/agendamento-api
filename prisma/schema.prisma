@@ -6,6 +6,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -16,19 +17,17 @@ model User {
   role         String        @default("CLIENT")
   createdAt    DateTime      @default(now())
   
-  // Relacionamento: Um usuário pode ter vários agendamentos
   appointments Appointment[] 
 }
 
 model Service {
   id              String        @id @default(uuid())
   name            String
-  description     String?       // O '?' significa que é opcional
+  description     String?       
   price           Decimal
   durationMinutes Int
   createdAt       DateTime      @default(now())
   
-  // Relacionamento: Um serviço pode estar em vários agendamentos
   appointments    Appointment[]
 }
 
