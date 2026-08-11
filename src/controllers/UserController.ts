@@ -1,6 +1,6 @@
 // src/controllers/UserController.ts
-import { Request, Response } from 'express';
-import { prisma } from '../lib/prisma';
+import type { Request, Response } from 'express';
+import { prisma } from '../lib/prisma.js';
 import bcrypt from 'bcrypt';
 
 export class UserController {

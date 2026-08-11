@@ -24,11 +24,11 @@ model Service {
   id              String        @id @default(uuid())
   name            String
   description     String?       
-  price           Decimal
+  price           Float
   durationMinutes Int
-  createdAt       DateTime      @default(now())
-  
   appointments    Appointment[]
+  createdAt       DateTime      @default(now())
+
 }
 
 model Appointment {
