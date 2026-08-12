@@ -1,4 +1,3 @@
-// src/controllers/ServiceController.ts
 import type { Request, Response } from 'express';
 import { prisma } from '../lib/prisma.js';
 
@@ -6,11 +5,11 @@ export class ServiceController {
   // Criar um novo serviço
   async create(req: Request, res: Response) {
     try {
-      const { title, description, price, durationMinutes } = req.body;
+      const { name, description, price, durationMinutes } = req.body;
 
       const service = await prisma.service.create({
         data: {
-          title,
+          name,
           description,
           price,
           durationMinutes
@@ -18,8 +17,9 @@ export class ServiceController {
       });
 
       return res.status(201).json(service);
-    } catch (error) {
-      return res.status(500).json({ error: 'Erro ao criar o serviço.' });
+    } catch (error: any) {
+      console.error("ERRO DETALHADO:", error);
+      return res.status(500).json({ error: 'Erro ao criar o serviço.', details: error.message });
     }
   }
 
@@ -29,6 +29,7 @@ export class ServiceController {
       const services = await prisma.service.findMany();
       return res.json(services);
     } catch (error) {
+      console.error("ERRO DETALHADO:", error);
       return res.status(500).json({ error: 'Erro ao listar os serviços.' });
     }
   }
