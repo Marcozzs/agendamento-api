@@ -38,7 +38,40 @@ Este comando gera a pasta `/prisma` com o arquivo `schema.prisma` e cria o arqui
 Modelagem Inicial do Banco (Prisma)
 
 Abaixo está o design do esquema relacional de dados estruturado para a API de agendamentos (`prisma/schema.prisma`):
-datasource db {  provider = "postgresql"  url      = env("DATABASE_URL")}generator client {  provider = "prisma-client-js"}model User {  id           String        @id @default(uuid())  name         String  email        String        @unique  passwordHash String  role         String        @default("CLIENT") // CLIENT ou ADMIN  appointments Appointment[]  createdAt    DateTime      @default(now())  updatedAt    DateTime      @updatedAt}model Service {  id              String        @id @default(uuid())  name            String  description     String?  price           Float  durationMinutes Int           // Duração em minutos  appointments    Appointment[]  createdAt       DateTime      @default(now())}model Appointment {
+
+```prisma
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           String        @id @default(uuid())
+  name         String
+  email        String        @unique
+  passwordHash String
+  role         String        @default("CLIENT") // CLIENT ou ADMIN
+  appointments Appointment[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model Service {
+  id           String        @id @default(uuid())
+  title        String
+  description  String?
+  price        Float
+  duration     Int           // Duração em minutos
+  appointments Appointment[]
+  createdAt    DateTime      @default(now())
+}
+
+
+model Appointment {
   id        String   @id @default(uuid())
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -49,6 +82,7 @@ datasource db {  provider = "postgresql"  url      = env("DATABASE_URL")}generat
   status    String   @default("CONFIRMED")
   createdAt DateTime @default(now())
 }
+```
 
 Aplicando a Modelagem no Banco de Dados
 
