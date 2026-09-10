@@ -360,8 +360,3 @@ Posteriormente, novas funcionalidades poderão ser adicionadas, como:
 * testes automatizados;
 * documentação da API;
 * deploy do backend.
-
-```
-
-Esse formato já fica bem mais adequado para a página inicial do repositório: **tecnologias → instalação → banco → arquitetura → roadmap → status atual**. Também corrigi a formatação dos comandos e do `schema.prisma`, que no texto original estavam todos “colados”.
-```
