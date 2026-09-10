@@ -1,44 +1,137 @@
-📅 API de Agendamentos - Guia de Desenvolvimento & Infraestrutura
+# 📅 API de Agendamentos
 
-Este documento reúne os comandos, configurações, especificações de infraestrutura e o passo a passo do desenvolvimento do backend do sistema de agendamentos.
+Backend de uma API REST para gerenciamento de agendamentos, desenvolvida com **Node.js, TypeScript, Express, Prisma e PostgreSQL**.
 
-⚙️ Passo a Passo: Inicialização & Configuração do Backend
+Este projeto tem como objetivo fornecer uma estrutura de backend organizada para cadastro de usuários, gerenciamento de serviços e criação de agendamentos.
 
-As etapas abaixo descrevem a preparação do ambiente do servidor e a integração com o banco de dados utilizando o Prisma ORM.
+---
 
-1. Criação e Configuração do Projeto
+## 🚀 Tecnologias utilizadas
 
-Inicialização do projeto Node.js e instalação das ferramentas de desenvolvimento para garantir tipagem estática e segurança na API:
-# Inicializa o package.json
-npm init -y# Instalação das dependências de produção
-npm install express cors dotenv bcrypt jsonwebtoken# Instalação das dependências de desenvolvimento e compiladores
-npm install -D typescript @types/express @types/node @types/cors @types/bcrypt @types/jsonwebtoken tsx# Inicializa o arquivo de configuração do TypeScript (tsconfig.json)
+* **Node.js** — Ambiente de execução JavaScript no servidor.
+* **TypeScript** — Tipagem estática para maior segurança e manutenção do código.
+* **Express** — Framework para criação da API e gerenciamento de rotas.
+* **Prisma ORM** — ORM utilizado para comunicação com o banco de dados.
+* **PostgreSQL** — Banco de dados relacional.
+* **Neon.tech** — Hospedagem do banco de dados PostgreSQL.
+* **JWT (JSON Web Token)** — Autenticação baseada em tokens.
+* **Bcrypt** — Hash seguro de senhas.
+* **CORS** — Controle de requisições entre diferentes origens.
+* **Dotenv** — Gerenciamento de variáveis de ambiente.
+* **tsx** — Execução de arquivos TypeScript durante o desenvolvimento.
+
+---
+
+# ⚙️ Configuração do projeto
+
+## 1. Inicialização do projeto
+
+Inicialização do projeto Node.js:
+
+```bash
+npm init -y
+```
+
+### Instalação das dependências
+
+Dependências de produção:
+
+```bash
+npm install express cors dotenv bcrypt jsonwebtoken
+```
+
+Dependências de desenvolvimento:
+
+```bash
+npm install -D typescript @types/express @types/node @types/cors @types/bcrypt @types/jsonwebtoken tsx
+```
+
+Inicialização do TypeScript:
+
+```bash
 npx tsc --init
+```
 
-- **Express:** Framework minimalista para criação de rotas e APIs.
-- **Cors:** Permite o compartilhamento de recursos entre diferentes origens.
-- **Dotenv:** Gerenciamento seguro de variáveis de ambiente.
-- **TypeScript:** Adiciona tipagem estática, reduzindo bugs e facilitando a manutenção.
-- **tsx:** Executor que roda arquivos `.ts` diretamente no ambiente de desenvolvimento.
-- **Bcrypt:** Criptografia segura de senhas (hash) para autenticação de usuários.
-- **Jsonwebtoken:** Autenticação baseada em tokens JWT para sessões.
+---
 
-2. Inicialização do Prisma ORM
+# 🗄️ Configuração do Prisma
 
-O Prisma foi adicionado como ORM para conectar e interagir com o PostgreSQL de forma tipada:
-# Instala as dependências do Prisma
+O **Prisma ORM** é utilizado para conectar a aplicação ao banco de dados PostgreSQL de forma tipada.
+
+### Instalação
+
+```bash
 npm install -D prisma
-npm install @prisma/client# Inicializa as configurações do Prisma apontando para o PostgreSQL
+npm install @prisma/client
+```
+
+Inicialização do Prisma com PostgreSQL:
+
+```bash
 npx prisma init --datasource-provider postgresql
+```
 
-Este comando gera a pasta `/prisma` com o arquivo `schema.prisma` e cria o arquivo `.env` para armazenamento da string de conexão (DATABASE_URL).
+Esse comando cria a pasta:
 
-🗄️ Modelagem de Dados & Banco na Nuvem (Neon.tech)
+```text
+prisma/
+└── schema.prisma
+```
 
-Modelagem Inicial do Banco (Prisma)
+Também é criado o arquivo `.env`, onde deve ser configurada a URL de conexão com o banco de dados.
 
-Abaixo está o design do esquema relacional de dados estruturado para a API de agendamentos (`prisma/schema.prisma`):
-datasource db {  provider = "postgresql"  url      = env("DATABASE_URL")}generator client {  provider = "prisma-client-js"}model User {  id           String        @id @default(uuid())  name         String  email        String        @unique  passwordHash String  role         String        @default("CLIENT") // CLIENT ou ADMIN  appointments Appointment[]  createdAt    DateTime      @default(now())  updatedAt    DateTime      @updatedAt}model Service {  id              String        @id @default(uuid())  name            String  description     String?  price           Float  durationMinutes Int           // Duração em minutos  appointments    Appointment[]  createdAt       DateTime      @default(now())}model Appointment {
+Exemplo:
+
+```env
+DATABASE_URL="sua_string_de_conexao"
+```
+
+> ⚠️ O arquivo `.env` não deve ser enviado para o GitHub. Adicione-o ao `.gitignore`.
+
+---
+
+# 🗃️ Modelagem do banco de dados
+
+O banco de dados utiliza três entidades principais:
+
+* **User** — Usuários da aplicação.
+* **Service** — Serviços disponíveis para agendamento.
+* **Appointment** — Agendamentos realizados pelos usuários.
+
+## Schema Prisma
+
+```prisma
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           String        @id @default(uuid())
+  name         String
+  email        String        @unique
+  passwordHash String
+  role         String        @default("CLIENT")
+  appointments Appointment[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model Service {
+  id              String        @id @default(uuid())
+  name            String
+  description     String?
+  price           Float
+  durationMinutes Int
+  appointments    Appointment[]
+  createdAt       DateTime      @default(now())
+}
+
+model Appointment {
   id        String   @id @default(uuid())
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -49,19 +142,21 @@ datasource db {  provider = "postgresql"  url      = env("DATABASE_URL")}generat
   status    String   @default("CONFIRMED")
   createdAt DateTime @default(now())
 }
+```
 
-Aplicando a Modelagem no Banco de Dados
+---
 
-Para rodar a migração e sincronizar o esquema com o banco PostgreSQL hospedado no Neon.tech:
+# 🔄 Migrações
+
+Após configurar o `schema.prisma`, execute a migração inicial:
+
+```bash
 npx prisma migrate dev --name init
+```
 
-🚀 Comandos de Execução
+Para gerar os artefatos do Prisma Client:
 
-No dia a dia, utilize os comandos abaixo na raiz do projeto:
-Iniciar o servidor de desenvolvimento:
-npm run dev
-
-Gerar os artefatos de tipagem do Prisma:
+```bash
 npx prisma generate
 
 🎯 Roteiro de Desenvolvimento (Fases & Funcionalidades)
