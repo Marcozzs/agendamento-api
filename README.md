@@ -279,7 +279,7 @@ Além disso:
 
 ## 📅 Passo 3 — Módulo de agendamentos
 
-**Status: 🔜 Próximos passos**
+**Status: 🚧 Em andamento**
 
 ### Funcionalidades planejadas
 
