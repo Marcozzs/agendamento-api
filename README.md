@@ -158,29 +158,205 @@ Para gerar os artefatos do Prisma Client:
 
 ```bash
 npx prisma generate
+```
 
-🎯 Roteiro de Desenvolvimento (Fases & Funcionalidades)
+---
 
-🛠️ Fase 1 & 2: Setup, Arquitetura e Banco de Dados (Concluído)
+# ▶️ Executando o projeto
 
-Configuração do ambiente TypeScript, Express e Cors.
-Integração e modelagem relacional via Prisma ORM com PostgreSQL (Neon.tech).
-Execução das migrações iniciais e estruturação do projeto em camadas (`src/controllers`, `src/services`, `src/routes`, `src/lib`).
+Após instalar as dependências e configurar o banco de dados, execute o servidor em modo de desenvolvimento:
 
-⚙️ Fase 3: Desenvolvimento do Backend (Em Andamento)
+```bash
+npm run dev
+```
 
-Passo 1: Autenticação & Cadastro de Usuários (Concluído)
-- Criação da rota `POST /users` para registro de usuários.
-- Implementação da criptografia de senhas utilizando o pacote `bcrypt` e sessões com `jsonwebtoken`.
-- Validação de e-mails duplicados e retorno seguro de dados sem exposição de senhas.
+---
 
-Passo 2: Gestão de Serviços (Concluído)
-- Criação completa do CRUD de serviços (`POST /services`, `GET /services`, `GET /services/:id`, `PUT /services/:id`, `DELETE /services/:id`).
-- Organização do projeto em arquitetura em camadas (`Controllers`, `Services` e `Routes`).
-- Integração validada e testada com sucesso no PostgreSQL hospedado na nuvem (Neon.tech).
+# 📁 Estrutura do projeto
 
-Passo 3: Módulo de Agendamentos (Próximos Passos)
-- Criação das rotas e regras de negócio para vincular usuários e serviços em datas e horários específicos.
-- Implementação de validações de conflito de horário para impedir reservas simultâneas no mesmo período.
-- Criação de endpoints para listagem de agendamentos por usuário e cancelamento de reservas.
-- Proteção de rotas utilizando o middleware de autenticação JWT para garantir que apenas usuários logados realizem agendamentos.
+O backend segue uma arquitetura organizada em camadas:
+
+```text
+agendamento-api/
+│
+├── prisma/
+│   └── schema.prisma
+│
+├── src/
+│   ├── controllers/
+│   ├── services/
+│   ├── routes/
+│   └── lib/
+│
+├── .env
+├── .gitignore
+├── package.json
+├── package-lock.json
+├── tsconfig.json
+└── README.md
+```
+
+### Responsabilidade das camadas
+
+**Controllers**
+
+Responsáveis por receber as requisições HTTP e retornar as respostas.
+
+**Services**
+
+Contêm as regras de negócio da aplicação.
+
+**Routes**
+
+Definem os endpoints disponíveis na API.
+
+**Lib**
+
+Contém configurações e recursos compartilhados pela aplicação.
+
+---
+
+# 🎯 Roadmap de desenvolvimento
+
+## 🛠️ Fases 1 e 2 — Setup, arquitetura e banco de dados
+
+**Status: ✅ Concluído**
+
+* [x] Configuração do Node.js
+* [x] Configuração do TypeScript
+* [x] Configuração do Express
+* [x] Configuração do CORS
+* [x] Configuração do Prisma ORM
+* [x] Integração com PostgreSQL
+* [x] Configuração do banco no Neon.tech
+* [x] Modelagem inicial do banco de dados
+* [x] Execução das migrações
+* [x] Estruturação da arquitetura em camadas
+* [x] Criação das pastas `controllers`, `services`, `routes` e `lib`
+
+---
+
+# ⚙️ Fase 3 — Desenvolvimento do Backend
+
+**Status: 🚧 Em andamento**
+
+## 🔐 Passo 1 — Autenticação e cadastro de usuários
+
+**Status: ✅ Concluído**
+
+* [x] Criação da rota `POST /users`
+* [x] Cadastro de usuários
+* [x] Hash de senhas utilizando `bcrypt`
+* [x] Implementação de autenticação utilizando JWT
+* [x] Validação de e-mails duplicados
+* [x] Retorno seguro dos dados dos usuários
+* [x] Proteção das senhas no retorno da API
+
+---
+
+## 🛠️ Passo 2 — Gestão de serviços
+
+**Status: ✅ Concluído**
+
+Implementação do CRUD completo de serviços:
+
+| Método   | Endpoint        | Descrição             |
+| -------- | --------------- | --------------------- |
+| `POST`   | `/services`     | Criar um serviço      |
+| `GET`    | `/services`     | Listar serviços       |
+| `GET`    | `/services/:id` | Buscar serviço por ID |
+| `PUT`    | `/services/:id` | Atualizar serviço     |
+| `DELETE` | `/services/:id` | Excluir serviço       |
+
+Além disso:
+
+* [x] Organização em Controllers, Services e Routes
+* [x] Integração com Prisma
+* [x] Integração com PostgreSQL
+* [x] Testes das operações no banco hospedado no Neon.tech
+
+---
+
+## 📅 Passo 3 — Módulo de agendamentos
+
+**Status: 🚧 Em andamento**
+
+### Funcionalidades planejadas
+
+* [ ] Criar rotas para gerenciamento de agendamentos.
+* [ ] Vincular usuários aos serviços.
+* [ ] Definir data e horário dos agendamentos.
+* [ ] Implementar regras de negócio para os agendamentos.
+* [ ] Validar conflitos de horário.
+* [ ] Impedir reservas simultâneas no mesmo período.
+* [ ] Criar endpoint para listar agendamentos de um usuário.
+* [ ] Criar funcionalidade de cancelamento de agendamentos.
+* [ ] Proteger as rotas utilizando middleware de autenticação JWT.
+* [ ] Garantir que apenas usuários autenticados possam realizar agendamentos.
+
+---
+
+# 🔐 Variáveis de ambiente
+
+O projeto utiliza variáveis de ambiente para armazenar informações sensíveis.
+
+Crie um arquivo `.env` na raiz do projeto:
+
+```env
+DATABASE_URL="sua_url_do_postgresql"
+JWT_SECRET="sua_chave_secreta"
+```
+
+Nunca versione o arquivo `.env`.
+
+No `.gitignore`:
+
+```gitignore
+node_modules/
+.env
+dist/
+```
+
+---
+
+# 🧪 Status atual
+
+O projeto encontra-se em desenvolvimento.
+
+### Implementado
+
+* ✅ Setup do backend
+* ✅ TypeScript
+* ✅ Express
+* ✅ Prisma
+* ✅ PostgreSQL
+* ✅ Neon.tech
+* ✅ Arquitetura em camadas
+* ✅ Cadastro de usuários
+* ✅ Hash de senhas
+* ✅ Autenticação JWT
+* ✅ CRUD de serviços
+
+### Em desenvolvimento
+
+* 🚧 Sistema de agendamentos
+* 🚧 Validação de conflitos de horários
+* 🚧 Cancelamento de agendamentos
+* 🚧 Middleware de autenticação
+* 🚧 Regras de negócio relacionadas aos horários
+
+---
+
+# 📌 Próximos passos
+
+O próximo objetivo do projeto é finalizar o **módulo de agendamentos**, implementando as regras de negócio necessárias para garantir que os usuários possam realizar e gerenciar suas reservas de forma segura e consistente.
+
+Posteriormente, novas funcionalidades poderão ser adicionadas, como:
+
+* gerenciamento de horários disponíveis;
+* diferentes níveis de acesso;
+* painel administrativo;
+* integração com frontend;
+* testes automatizados;
+* documentação da API;
+* deploy do backend.
