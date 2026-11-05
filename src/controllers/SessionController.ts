@@ -19,8 +19,12 @@ export class SessionController {
       return res.status(401).json({ error: 'Credenciais inválidas.' });
     }
 
-    // 3. Gerar o Token JWT
-    const token = jwt.sign({ id: user.id, role: user.role }, 'SEGREDO_SUPER_FORTE', {
+    // 3. Gerar o Token JWT (o segredo vem do .env, nunca fica fixo no código)
+    const secret = process.env.JWT_SECRET;
+    if (!secret) {
+      throw new Error('JWT_SECRET não configurado no .env');
+    }
+    const token = jwt.sign({ id: user.id, role: user.role }, secret, {
       expiresIn: '1d'
     });
 

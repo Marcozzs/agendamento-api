@@ -1,31 +1,22 @@
 // src/server.ts
+import 'dotenv/config';          // carrega as variáveis do .env (DATABASE_URL, JWT_SECRET)
 import express from 'express';
+import 'express-async-errors';   // erros em funções async caem no tratador de erros abaixo
 import cors from 'cors';
-import { UserController } from './controllers/UserController.js';
-import { ServiceController } from './controllers/ServiceController.js';
-import { SessionController } from './controllers/SessionController.js';
+import type { Request, Response, NextFunction } from 'express';
+import { routes } from './routes/index.js';
+
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(routes);
 
-const userController = new UserController();
-const serviceController = new ServiceController();
-const sessionController = new SessionController();
-
-// Rota de teste
-app.get('/ping', (req, res) => {
-  res.json({ message: 'Pong! A API está viva!' });
+// Tratador de erros global: evita derrubar o servidor e não expõe detalhes internos
+app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
+  console.error(error);
+  return res.status(500).json({ error: 'Erro interno no servidor.' });
 });
-
-// Rotas de Usuários
-app.post('/users', userController.create);
-
-// Rotas de Serviços
-app.post('/services', serviceController.create);
-app.get('/services', serviceController.list);
-
-app.post('/sessions', sessionController.create);
 
 const PORT = process.env.PORT || 3000;
 

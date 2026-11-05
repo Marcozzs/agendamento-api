@@ -6,7 +6,12 @@ import bcrypt from 'bcrypt';
 export class UserController {
   async create(req: Request, res: Response) {
     try {
-      const { name, email, password, role } = req.body;
+      // O "role" NÃO é lido do body: senão qualquer pessoa poderia se cadastrar como ADMIN
+      const { name, email, password } = req.body;
+
+      if (!name || !email || !password) {
+        return res.status(400).json({ error: 'Informe nome, e-mail e senha.' });
+      }
 
       // 1. Verifica se o usuário já existe
       const userExists = await prisma.user.findUnique({
@@ -26,7 +31,7 @@ export class UserController {
           name,
           email,
           passwordHash,
-          role: role || 'CLIENT' // Se não mandar, o padrão é CLIENT
+          role: 'CLIENT' // cadastro público é sempre CLIENT
         },
         select: {
           id: true,
